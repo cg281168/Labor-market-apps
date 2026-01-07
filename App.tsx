@@ -10,8 +10,8 @@ const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>(Language.GL);
   const [indicator, setIndicator] = useState<IndicatorType>(IndicatorType.UNEMPLOYMENT_RATE);
   const [characteristic, setCharacteristic] = useState<CharacteristicType>(CharacteristicType.REGION);
-  const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.QUARTERLY);
-  const [startYear, setStartYear] = useState<number>(2005);
+  const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.ANNUAL);
+  const [startYear, setStartYear] = useState<number>(2002);
   const [endYear, setEndYear] = useState<number>(2024);
   const [minAge, setMinAge] = useState<number>(16);
   const [maxAge, setMaxAge] = useState<number>(64);
