@@ -1,5 +1,5 @@
 
-import { Language, IndicatorType, CharacteristicType, FrequencyType } from './types';
+import { Language, IndicatorType, CharacteristicType, FrequencyType, WageType } from './types';
 
 export const translations: Record<Language, any> = {
   [Language.EN]: {
@@ -7,6 +7,9 @@ export const translations: Record<Language, any> = {
     tagline: "INE Labor Intelligence",
     config: "Configuration",
     metric: "Metric",
+    wageType: "Euro Valuation",
+    nominal: "Nominal",
+    constant: "Constant (2024)",
     ageRange: "Age Range Filter",
     breakdown: "Breakdown",
     filterItems: "Filter Items",
@@ -30,6 +33,7 @@ export const translations: Record<Language, any> = {
       [IndicatorType.UNEMPLOYMENT_RATE]: "Unemployment Rate",
       [IndicatorType.LABOR_FORCE_RATE]: "Labor Force Rate",
       [IndicatorType.EMPLOYMENT_RATE]: "Employment Rate",
+      [IndicatorType.MONTHLY_WAGE]: "Monthly Wage",
     },
     characteristics: {
       [CharacteristicType.REGION]: "Autonomous Community",
@@ -53,6 +57,9 @@ export const translations: Record<Language, any> = {
     tagline: "Intelixencia Laboral do INE",
     config: "Configuración",
     metric: "Métrica",
+    wageType: "Valoración do Euro",
+    nominal: "Nominal",
+    constant: "Constante (2024)",
     ageRange: "Filtro de Idade",
     breakdown: "Desagregación",
     filterItems: "Filtrar Elementos",
@@ -76,6 +83,7 @@ export const translations: Record<Language, any> = {
       [IndicatorType.UNEMPLOYMENT_RATE]: "Taxa de Paro",
       [IndicatorType.LABOR_FORCE_RATE]: "Taxa de Actividade",
       [IndicatorType.EMPLOYMENT_RATE]: "Taxa de Emprego",
+      [IndicatorType.MONTHLY_WAGE]: "Salario Mensual",
     },
     characteristics: {
       [CharacteristicType.REGION]: "Comunidade Autónoma",
@@ -99,6 +107,9 @@ export const translations: Record<Language, any> = {
     tagline: "Inteligencia Laboral del INE",
     config: "Configuración",
     metric: "Métrica",
+    wageType: "Valoración del Euro",
+    nominal: "Nominal",
+    constant: "Constante (2024)",
     ageRange: "Filtro de Edad",
     breakdown: "Desglose",
     filterItems: "Filtrar Elementos",
@@ -122,6 +133,7 @@ export const translations: Record<Language, any> = {
       [IndicatorType.UNEMPLOYMENT_RATE]: "Tasa de Paro",
       [IndicatorType.LABOR_FORCE_RATE]: "Tasa de Actividad",
       [IndicatorType.EMPLOYMENT_RATE]: "Tasa de Empleo",
+      [IndicatorType.MONTHLY_WAGE]: "Salario Mensual",
     },
     characteristics: {
       [CharacteristicType.REGION]: "Comunidad Autónoma",
@@ -134,7 +146,7 @@ export const translations: Record<Language, any> = {
       [FrequencyType.QUARTERLY]: "Trimestral",
     },
     itemLabels: {
-      "Madrid": "Madrid", "Catalonia": "Cataluña", "Andalusia": "Andalucía", "Basque Country": "País Vasco", "Valencia": "Valencia", "Galicia": "Galicia", "Castile and León": "Castilla y León", "Canary Islands": "Islas Canarias", "Murcia": "Murcia", "Aragon": "Aragón",
+      "Madrid": "Madrid", "Catalonia": "Cataluña", "Andalusia": "Andalucía", "Basque Country": "País Vasco", "Valencia": "Valencia", "Galicia": "Galicia", "Castilla y León": "Castilla y León", "Canary Islands": "Islas Canarias", "Murcia": "Murcia", "Aragon": "Aragón",
       "Primary": "Primaria", "Secondary": "Secundaria", "Vocational Training": "Formación Profesional", "Higher Education": "Educación Superior",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",
       "Male": "Hombre", "Female": "Mujer"
@@ -145,6 +157,9 @@ export const translations: Record<Language, any> = {
     tagline: "INE Lan Adimen",
     config: "Konfigurazioa",
     metric: "Metrika",
+    wageType: "Euroaren Balorazioa",
+    nominal: "Nominala",
+    constant: "Konstantea (2024)",
     ageRange: "Adin-iragazkia",
     breakdown: "Banaketa",
     filterItems: "Elementuak Iragazi",
@@ -168,6 +183,7 @@ export const translations: Record<Language, any> = {
       [IndicatorType.UNEMPLOYMENT_RATE]: "Langabezia-tasa",
       [IndicatorType.LABOR_FORCE_RATE]: "Jarduera-tasa",
       [IndicatorType.EMPLOYMENT_RATE]: "Enplegu-tasa",
+      [IndicatorType.MONTHLY_WAGE]: "Hileko Soldata",
     },
     characteristics: {
       [CharacteristicType.REGION]: "Autonomia Erkidegoa",
@@ -191,6 +207,9 @@ export const translations: Record<Language, any> = {
     tagline: "Intel·ligència Laboral de l'INE",
     config: "Configuració",
     metric: "Mètrica",
+    wageType: "Valoració de l'Euro",
+    nominal: "Nominal",
+    constant: "Constant (2024)",
     ageRange: "Filtre d'Edat",
     breakdown: "Desglossament",
     filterItems: "Filtrar Elements",
@@ -214,6 +233,7 @@ export const translations: Record<Language, any> = {
       [IndicatorType.UNEMPLOYMENT_RATE]: "Taxa d'Atur",
       [IndicatorType.LABOR_FORCE_RATE]: "Taxa d'Activitat",
       [IndicatorType.EMPLOYMENT_RATE]: "Taxa d'Ocupació",
+      [IndicatorType.MONTHLY_WAGE]: "Salari Mensual",
     },
     characteristics: {
       [CharacteristicType.REGION]: "Comunitat Autònoma",
@@ -227,7 +247,7 @@ export const translations: Record<Language, any> = {
     },
     itemLabels: {
       "Madrid": "Madrid", "Catalonia": "Catalunya", "Andalusia": "Andalusia", "Basque Country": "País Basc", "Valencia": "València", "Galicia": "Galícia", "Castile and León": "Castella i Lleó", "Canary Islands": "Illes Canàries", "Murcia": "Múrcia", "Aragon": "Aragó",
-      "Primary": "Primària", "Secondary": "Secundària", "Vocational Training": "Formació Professional", "Higher Education": "Educació Superior",
+      "Primary": "Primària", "Secondary": "Secundària", "Vocational Training": "Formación Professional", "Higher Education": "Educació Superior",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",
       "Male": "Home", "Female": "Dona"
     }

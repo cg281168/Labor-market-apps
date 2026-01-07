@@ -11,6 +11,12 @@ export enum IndicatorType {
   UNEMPLOYMENT_RATE = 'Unemployment Rate',
   LABOR_FORCE_RATE = 'Labor Force Rate',
   EMPLOYMENT_RATE = 'Employment Rate',
+  MONTHLY_WAGE = 'Monthly Wage',
+}
+
+export enum WageType {
+  NOMINAL = 'Nominal',
+  CONSTANT = 'Constant',
 }
 
 export enum CharacteristicType {

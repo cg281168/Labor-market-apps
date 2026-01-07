@@ -17,6 +17,9 @@ interface ChartContainerProps {
 
 const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartType, showEvents, language }) => {
   const t = translations[language];
+  const isWage = indicator === IndicatorType.MONTHLY_WAGE;
+  const unit = isWage ? '€' : '%';
+
   const chartData = useMemo(() => {
     const periods: string[] = Array.from(new Set(data.map(d => d.period)));
     const categories: string[] = Array.from(new Set(data.map(d => d.category)));
@@ -92,8 +95,10 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
   const renderChart = () => {
     const commonProps = {
       data: chartData,
-      margin: { top: 20, right: 30, left: 0, bottom: 0 },
+      margin: { top: 20, right: 30, left: 10, bottom: 0 },
     };
+
+    const valueFormatter = (value: any) => `${value.toLocaleString()}${unit}`;
 
     switch (chartType) {
       case 'area':
@@ -109,10 +114,10 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
             </defs>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
             <XAxis dataKey="period" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} minTickGap={30} />
-            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit="%" />
+            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit={unit} domain={isWage ? ['auto', 'auto'] : [0, 'auto']} />
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              formatter={(value, name) => [value + '%', t.itemLabels[name as string] || name]}
+              formatter={(value, name) => [valueFormatter(value), t.itemLabels[name as string] || name]}
             />
             <Legend verticalAlign="top" height={36} formatter={(value) => t.itemLabels[value] || value} />
             {renderEvents()}
@@ -136,10 +141,10 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
           <BarChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
             <XAxis dataKey="period" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} minTickGap={30} />
-            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit="%" />
+            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit={unit} domain={isWage ? ['auto', 'auto'] : [0, 'auto']} />
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              formatter={(value, name) => [value + '%', t.itemLabels[name as string] || name]}
+              formatter={(value, name) => [valueFormatter(value), t.itemLabels[name as string] || name]}
             />
             <Legend verticalAlign="top" height={36} formatter={(value) => t.itemLabels[value] || value} />
             {renderEvents()}
@@ -160,10 +165,10 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
           <LineChart {...commonProps}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
             <XAxis dataKey="period" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} minTickGap={30} />
-            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit="%" />
+            <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit={unit} domain={isWage ? ['auto', 'auto'] : [0, 'auto']} />
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-              formatter={(value, name) => [value + '%', t.itemLabels[name as string] || name]}
+              formatter={(value, name) => [valueFormatter(value), t.itemLabels[name as string] || name]}
             />
             <Legend verticalAlign="top" height={36} formatter={(value) => t.itemLabels[value] || value} />
             {renderEvents()}

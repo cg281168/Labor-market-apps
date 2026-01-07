@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { IndicatorType, CharacteristicType, DataPoint, FrequencyType, Language } from './types';
+import { IndicatorType, CharacteristicType, DataPoint, FrequencyType, Language, WageType } from './types';
 import { fetchLaborData, getAvailableItems } from './services/ineService';
 import ChartContainer from './components/ChartContainer';
 import AnalysisPanel from './components/AnalysisPanel';
@@ -9,6 +9,7 @@ import { translations } from './translations';
 const App: React.FC = () => {
   const [language, setLanguage] = useState<Language>(Language.GL);
   const [indicator, setIndicator] = useState<IndicatorType>(IndicatorType.UNEMPLOYMENT_RATE);
+  const [wageType, setWageType] = useState<WageType>(WageType.CONSTANT);
   const [characteristic, setCharacteristic] = useState<CharacteristicType>(CharacteristicType.REGION);
   const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.ANNUAL);
   const [startYear, setStartYear] = useState<number>(2002);
@@ -31,14 +32,14 @@ const App: React.FC = () => {
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const fetched = await fetchLaborData(indicator, characteristic, frequency, startYear, endYear, minAge, maxAge);
+      const fetched = await fetchLaborData(indicator, characteristic, frequency, startYear, endYear, minAge, maxAge, wageType);
       setRawData(fetched);
     } catch (err) {
       console.error("Failed to load INE data", err);
     } finally {
       setLoading(false);
     }
-  }, [indicator, characteristic, frequency, startYear, endYear, minAge, maxAge]);
+  }, [indicator, characteristic, frequency, startYear, endYear, minAge, maxAge, wageType]);
 
   useEffect(() => {
     loadData();
@@ -142,6 +143,25 @@ const App: React.FC = () => {
                   ))}
                 </select>
               </div>
+
+              {indicator === IndicatorType.MONTHLY_WAGE && (
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">{t.wageType}</label>
+                  <div className="flex bg-slate-100 p-1 rounded-lg">
+                    {Object.values(WageType).map(w => (
+                      <button
+                        key={w}
+                        onClick={() => setWageType(w)}
+                        className={`flex-1 py-1.5 rounded-md text-xs font-bold transition-all ${
+                          wageType === w ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                        }`}
+                      >
+                        {w === WageType.NOMINAL ? t.nominal : t.constant}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">{t.ageRange}</label>
@@ -252,7 +272,14 @@ const App: React.FC = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">{t.indicators[indicator]}</h2>
+                <h2 className="text-2xl font-bold text-slate-900">
+                  {t.indicators[indicator]}
+                  {indicator === IndicatorType.MONTHLY_WAGE && (
+                    <span className="ml-2 text-sm font-medium text-slate-400">
+                      ({wageType === WageType.NOMINAL ? t.nominal : t.constant})
+                    </span>
+                  )}
+                </h2>
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
                     {t.characteristics[characteristic]}
