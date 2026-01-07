@@ -1,4 +1,12 @@
 
+export enum Language {
+  EN = 'en',
+  ES = 'es',
+  GL = 'gl',
+  EU = 'eu',
+  CA = 'ca',
+}
+
 export enum IndicatorType {
   UNEMPLOYMENT_RATE = 'Unemployment Rate',
   LABOR_FORCE_RATE = 'Labor Force Rate',

@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { IndicatorType, CharacteristicType, DataPoint, FrequencyType } from './types';
+import { IndicatorType, CharacteristicType, DataPoint, FrequencyType, Language } from './types';
 import { fetchLaborData, getAvailableItems } from './services/ineService';
 import ChartContainer from './components/ChartContainer';
 import AnalysisPanel from './components/AnalysisPanel';
+import { translations } from './translations';
 
 const App: React.FC = () => {
+  const [language, setLanguage] = useState<Language>(Language.GL);
   const [indicator, setIndicator] = useState<IndicatorType>(IndicatorType.UNEMPLOYMENT_RATE);
   const [characteristic, setCharacteristic] = useState<CharacteristicType>(CharacteristicType.REGION);
   const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.QUARTERLY);
@@ -19,6 +21,7 @@ const App: React.FC = () => {
   const [rawData, setRawData] = useState<DataPoint[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const t = translations[language];
   const allItems = useMemo(() => getAvailableItems(characteristic), [characteristic]);
 
   useEffect(() => {
@@ -65,11 +68,28 @@ const App: React.FC = () => {
               <i className="fa-solid fa-chart-pie text-white text-xl"></i>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-slate-900 tracking-tight">IberiaData</h1>
-              <p className="text-[10px] text-slate-500 font-medium uppercase tracking-widest leading-none">INE Labor Intelligence</p>
+              <h1 className="text-xl font-bold text-slate-900 tracking-tight">{t.appName}</h1>
+              <p className="text-[10px] text-slate-500 font-medium uppercase tracking-widest leading-none">{t.tagline}</p>
             </div>
           </div>
-          <div className="hidden md:flex items-center gap-6">
+          
+          <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center bg-slate-100 p-1 rounded-lg gap-1">
+              {Object.values(Language).map(lang => (
+                <button
+                  key={lang}
+                  onClick={() => setLanguage(lang)}
+                  className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition-all ${
+                    language === lang ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                  }`}
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
+
+            <div className="h-6 w-[1px] bg-slate-200 mx-2"></div>
+
             <div className="flex bg-slate-100 p-1 rounded-lg">
               {Object.values(FrequencyType).map(f => (
                 <button
@@ -79,10 +99,11 @@ const App: React.FC = () => {
                     frequency === f ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
                   }`}
                 >
-                  {f}
+                  {t.frequencies[f]}
                 </button>
               ))}
             </div>
+
             <div className="flex items-center gap-2 text-sm bg-slate-50 border border-slate-200 rounded-lg px-2 py-1">
               <select 
                 value={startYear} 
@@ -107,58 +128,58 @@ const App: React.FC = () => {
       <main className="flex-1 max-w-7xl mx-auto w-full p-4 md:p-8 grid grid-cols-1 lg:grid-cols-4 gap-8">
         <aside className="lg:col-span-1 space-y-6">
           <section className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Configuration</h2>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t.config}</h2>
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Metric</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t.metric}</label>
                 <select 
                   value={indicator}
                   onChange={(e) => setIndicator(e.target.value as IndicatorType)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
                 >
                   {Object.values(IndicatorType).map(type => (
-                    <option key={type} value={type}>{type}</option>
+                    <option key={type} value={type}>{t.indicators[type]}</option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Age Range Filter</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t.ageRange}</label>
                 <div className="flex items-center gap-2">
                   <select 
                     value={minAge} 
                     onChange={e => setMinAge(Number(e.target.value))}
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500"
                   >
-                    {ageOptions.map(age => <option key={age} value={age}>Min: {age}</option>)}
+                    {ageOptions.map(age => <option key={age} value={age}>{t.min}: {age}</option>)}
                   </select>
-                  <span className="text-slate-400 text-xs">to</span>
+                  <span className="text-slate-400 text-xs">{t.to}</span>
                   <select 
                     value={maxAge} 
                     onChange={e => setMaxAge(Number(e.target.value))}
                     className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500"
                   >
-                    {ageOptions.filter(a => a > minAge).map(age => <option key={age} value={age}>Max: {age === 75 ? '75+' : age}</option>)}
-                    {maxAge === 64 && !ageOptions.includes(64) && <option value={64}>Max: 64</option>}
+                    {ageOptions.filter(a => a > minAge).map(age => <option key={age} value={age}>{t.max}: {age === 75 ? '75+' : age}</option>)}
+                    {maxAge === 64 && !ageOptions.includes(64) && <option value={64}>{t.max}: 64</option>}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Breakdown</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t.breakdown}</label>
                 <select 
                   value={characteristic}
                   onChange={(e) => setCharacteristic(e.target.value as CharacteristicType)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500 transition-all cursor-pointer"
                 >
                   {Object.values(CharacteristicType).map(type => (
-                    <option key={type} value={type}>{type}</option>
+                    <option key={type} value={type}>{t.characteristics[type]}</option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Filter Items</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t.filterItems}</label>
                 <div className="max-h-[180px] overflow-y-auto pr-2 space-y-1 custom-scrollbar">
                   {allItems.map(item => (
                     <label key={item} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 cursor-pointer transition-colors group">
@@ -175,15 +196,15 @@ const App: React.FC = () => {
                   ))}
                 </div>
                 <div className="mt-2 flex justify-between px-1">
-                  <button onClick={() => setSelectedItems(allItems)} className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-tight">Select All</button>
-                  <button onClick={() => setSelectedItems([])} className="text-[10px] font-bold text-slate-400 hover:text-slate-600 uppercase tracking-tight">Clear</button>
+                  <button onClick={() => setSelectedItems(allItems)} className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-tight">{t.selectAll}</button>
+                  <button onClick={() => setSelectedItems([])} className="text-[10px] font-bold text-slate-400 hover:text-slate-600 uppercase tracking-tight">{t.clear}</button>
                 </div>
               </div>
 
               <div className="pt-4 border-t border-slate-100">
-                <label className="block text-sm font-semibold text-slate-700 mb-3">Contextual Layers</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-3">{t.contextualLayers}</label>
                 <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-100">
-                  <span className="text-xs font-medium text-slate-600">Recession Markers</span>
+                  <span className="text-xs font-medium text-slate-600">{t.recessionMarkers}</span>
                   <button 
                     onClick={() => setShowEvents(!showEvents)}
                     className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none ${showEvents ? 'bg-indigo-600' : 'bg-slate-300'}`}
@@ -194,7 +215,7 @@ const App: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Visualization</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">{t.visualization}</label>
                 <div className="grid grid-cols-3 gap-2">
                   {(['line', 'bar', 'area'] as const).map(type => (
                     <button
@@ -214,13 +235,13 @@ const App: React.FC = () => {
 
           <div className="bg-gradient-to-br from-indigo-600 to-indigo-800 rounded-xl p-6 text-white shadow-lg overflow-hidden relative">
             <div className="relative z-10">
-              <h3 className="font-bold mb-1 text-lg">Demographic Shift</h3>
+              <h3 className="font-bold mb-1 text-lg">{t.historicalAnalysis}</h3>
               <p className="text-xs text-indigo-100 mb-4 leading-relaxed">
-                Refining analysis for ages {minAge}-{maxAge}. Observe how participation varies by generation.
+                Visualizing labor market evolution. Explore the impact of global economic cycles.
               </p>
               <div className="flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full border border-white/20">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Dynamic Filter</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{t.dynamicFilter}</span>
               </div>
             </div>
             <i className="fa-solid fa-users-line absolute bottom-[-10px] right-[-10px] text-8xl text-indigo-400 opacity-10 rotate-12"></i>
@@ -231,20 +252,20 @@ const App: React.FC = () => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-slate-900">{indicator}</h2>
+                <h2 className="text-2xl font-bold text-slate-900">{t.indicators[indicator]}</h2>
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
-                    {characteristic}
+                    {t.characteristics[characteristic]}
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="text-xs text-slate-500 font-medium">
-                    Ages {minAge}-{maxAge} ({frequency})
+                    Ages {minAge}-{maxAge} ({t.frequencies[frequency]})
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-2 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
                 <button className="px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-indigo-600 transition-colors rounded-md hover:bg-white shadow-sm">
-                  <i className="fa-solid fa-share mr-2"></i> Export CSV
+                  <i className="fa-solid fa-share mr-2"></i> {t.exportCsv}
                 </button>
               </div>
             </div>
@@ -263,7 +284,7 @@ const App: React.FC = () => {
                 <i className="fa-solid fa-filter-circle-xmark text-5xl opacity-20"></i>
                 <div className="text-center">
                   <p className="font-semibold text-slate-600">No items selected</p>
-                  <p className="text-xs">Please select at least one {characteristic} from the sidebar to visualize.</p>
+                  <p className="text-xs">Please select items from the sidebar to visualize.</p>
                 </div>
               </div>
             )}
@@ -275,25 +296,26 @@ const App: React.FC = () => {
                 characteristic={characteristic} 
                 data={filteredData} 
                 ageRange={{ min: minAge, max: maxAge }} 
+                language={language}
              />
              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                 <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                   <i className="fa-solid fa-clock-rotate-left text-indigo-400"></i>
-                  Long-term Trends
+                  {t.longTermTrends}
                 </h3>
                 <div className="space-y-4 text-sm text-slate-600">
                   <p>
-                    Analyzing workers from <span className="font-bold text-slate-800">{minAge}</span> to <span className="font-bold text-slate-800">{maxAge}</span> years old. This provides a granular look at economic participation.
+                    Analyzing workers from <span className="font-bold text-slate-800">{minAge}</span> to <span className="font-bold text-slate-800">{maxAge}</span> years old.
                   </p>
                   <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
                     <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Historical Context</h4>
                     <p className="text-[11px] text-slate-500 leading-relaxed italic">
-                      "EPA data includes specific micro-data for the selected age cohort, allowing for precise comparison of demographic segments across the {startYear}-{endYear} horizon."
+                      "EPA data includes specific micro-data for the selected age cohort, allowing for precise comparison of demographic segments."
                     </p>
                   </div>
                   <div className="pt-2">
                     <button className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
-                      Download Full Methodology
+                      {t.methodology}
                     </button>
                   </div>
                 </div>
