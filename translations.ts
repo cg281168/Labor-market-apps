@@ -46,6 +46,7 @@ export const translations: Record<Language, any> = {
       [FrequencyType.QUARTERLY]: "Quarterly",
     },
     itemLabels: {
+      "Total": "Total",
       "Madrid": "Madrid", "Catalonia": "Catalonia", "Andalusia": "Andalusia", "Basque Country": "Basque Country", "Valencia": "Valencia", "Galicia": "Galicia", "Castile and León": "Castile and León", "Canary Islands": "Canary Islands", "Murcia": "Murcia", "Aragon": "Aragon",
       "Primary": "Primary", "Secondary": "Secondary", "Vocational Training": "Vocational Training", "Higher Education": "Higher Education",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",
@@ -96,6 +97,7 @@ export const translations: Record<Language, any> = {
       [FrequencyType.QUARTERLY]: "Trimestral",
     },
     itemLabels: {
+      "Total": "Total",
       "Madrid": "Madrid", "Catalonia": "Cataluña", "Andalusia": "Andalucía", "Basque Country": "País Vasco", "Valencia": "Valencia", "Galicia": "Galicia", "Castile and León": "Castela e León", "Canary Islands": "Illas Canarias", "Murcia": "Murcia", "Aragon": "Aragón",
       "Primary": "Primaria", "Secondary": "Secundaria", "Vocational Training": "Formación Profesional", "Higher Education": "Educación Superior",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",
@@ -146,6 +148,7 @@ export const translations: Record<Language, any> = {
       [FrequencyType.QUARTERLY]: "Trimestral",
     },
     itemLabels: {
+      "Total": "Total",
       "Madrid": "Madrid", "Catalonia": "Cataluña", "Andalusia": "Andalucía", "Basque Country": "País Vasco", "Valencia": "Valencia", "Galicia": "Galicia", "Castilla y León": "Castilla y León", "Canary Islands": "Islas Canarias", "Murcia": "Murcia", "Aragon": "Aragón",
       "Primary": "Primaria", "Secondary": "Secundaria", "Vocational Training": "Formación Profesional", "Higher Education": "Educación Superior",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",
@@ -196,6 +199,7 @@ export const translations: Record<Language, any> = {
       [FrequencyType.QUARTERLY]: "Hiruhilekoa",
     },
     itemLabels: {
+      "Total": "Guztira",
       "Madrid": "Madril", "Catalonia": "Katalunia", "Andalusia": "Andaluzia", "Basque Country": "Euskal Herria", "Valencia": "Valentzia", "Galicia": "Galizia", "Castile and León": "Gaztela eta Leon", "Canary Islands": "Kanariak", "Murcia": "Murtzia", "Aragon": "Aragoi",
       "Primary": "Lehen hezkuntza", "Secondary": "Bigarren hezkuntza", "Vocational Training": "Lanbide Heziketa", "Higher Education": "Goi Mailako Ikasketak",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",
@@ -246,6 +250,7 @@ export const translations: Record<Language, any> = {
       [FrequencyType.QUARTERLY]: "Trimestral",
     },
     itemLabels: {
+      "Total": "Total",
       "Madrid": "Madrid", "Catalonia": "Catalunya", "Andalusia": "Andalusia", "Basque Country": "País Basc", "Valencia": "València", "Galicia": "Galícia", "Castile and León": "Castella i Lleó", "Canary Islands": "Illes Canàries", "Murcia": "Múrcia", "Aragon": "Aragó",
       "Primary": "Primària", "Secondary": "Secundària", "Vocational Training": "Formación Professional", "Higher Education": "Educació Superior",
       "16-24": "16-24", "25-54": "25-54", "55+": "55+",

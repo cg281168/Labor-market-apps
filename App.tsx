@@ -7,7 +7,15 @@ import AnalysisPanel from './components/AnalysisPanel';
 import { translations } from './translations';
 
 const App: React.FC = () => {
-  const [language, setLanguage] = useState<Language>(Language.GL);
+  // Initialize language from localStorage or default to Galician
+  const [language, setLanguage] = useState<Language>(() => {
+    const saved = localStorage.getItem('iberiadata_pref_lang');
+    if (saved && Object.values(Language).includes(saved as Language)) {
+      return saved as Language;
+    }
+    return Language.GL;
+  });
+
   const [indicator, setIndicator] = useState<IndicatorType>(IndicatorType.UNEMPLOYMENT_RATE);
   const [wageType, setWageType] = useState<WageType>(WageType.CONSTANT);
   const [characteristic, setCharacteristic] = useState<CharacteristicType>(CharacteristicType.REGION);
@@ -25,7 +33,13 @@ const App: React.FC = () => {
   const t = translations[language];
   const allItems = useMemo(() => getAvailableItems(characteristic), [characteristic]);
 
+  // Persist language preference
   useEffect(() => {
+    localStorage.setItem('iberiadata_pref_lang', language);
+  }, [language]);
+
+  useEffect(() => {
+    // Select Total and first two items by default
     setSelectedItems(allItems.slice(0, 3));
   }, [allItems]);
 
@@ -83,6 +97,7 @@ const App: React.FC = () => {
                   className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition-all ${
                     language === lang ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
                   }`}
+                  aria-label={`Switch to ${lang}`}
                 >
                   {lang}
                 </button>
@@ -315,6 +330,11 @@ const App: React.FC = () => {
                 </div>
               </div>
             )}
+            <div className="mt-4 pt-4 border-t border-slate-50 flex justify-end">
+              <span className="text-[10px] text-slate-400 italic">
+                Source: Simulation based on historical INE (EPA) benchmarks.
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
