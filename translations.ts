@@ -40,6 +40,12 @@ export const translations: Record<Language, any> = {
     frequencies: {
       [FrequencyType.ANNUAL]: "Annual",
       [FrequencyType.QUARTERLY]: "Quarterly",
+    },
+    itemLabels: {
+      "Madrid": "Madrid", "Catalonia": "Catalonia", "Andalusia": "Andalusia", "Basque Country": "Basque Country", "Valencia": "Valencia", "Galicia": "Galicia", "Castile and León": "Castile and León", "Canary Islands": "Canary Islands", "Murcia": "Murcia", "Aragon": "Aragon",
+      "Primary": "Primary", "Secondary": "Secondary", "Vocational Training": "Vocational Training", "Higher Education": "Higher Education",
+      "16-24": "16-24", "25-54": "25-54", "55+": "55+",
+      "Male": "Male", "Female": "Female"
     }
   },
   [Language.GL]: {
@@ -80,6 +86,12 @@ export const translations: Record<Language, any> = {
     frequencies: {
       [FrequencyType.ANNUAL]: "Anual",
       [FrequencyType.QUARTERLY]: "Trimestral",
+    },
+    itemLabels: {
+      "Madrid": "Madrid", "Catalonia": "Cataluña", "Andalusia": "Andalucía", "Basque Country": "País Vasco", "Valencia": "Valencia", "Galicia": "Galicia", "Castile and León": "Castela e León", "Canary Islands": "Illas Canarias", "Murcia": "Murcia", "Aragon": "Aragón",
+      "Primary": "Primaria", "Secondary": "Secundaria", "Vocational Training": "Formación Profesional", "Higher Education": "Educación Superior",
+      "16-24": "16-24", "25-54": "25-54", "55+": "55+",
+      "Male": "Home", "Female": "Muller"
     }
   },
   [Language.ES]: {
@@ -120,6 +132,12 @@ export const translations: Record<Language, any> = {
     frequencies: {
       [FrequencyType.ANNUAL]: "Anual",
       [FrequencyType.QUARTERLY]: "Trimestral",
+    },
+    itemLabels: {
+      "Madrid": "Madrid", "Catalonia": "Cataluña", "Andalusia": "Andalucía", "Basque Country": "País Vasco", "Valencia": "Valencia", "Galicia": "Galicia", "Castile and León": "Castilla y León", "Canary Islands": "Islas Canarias", "Murcia": "Murcia", "Aragon": "Aragón",
+      "Primary": "Primaria", "Secondary": "Secundaria", "Vocational Training": "Formación Profesional", "Higher Education": "Educación Superior",
+      "16-24": "16-24", "25-54": "25-54", "55+": "55+",
+      "Male": "Hombre", "Female": "Mujer"
     }
   },
   [Language.EU]: {
@@ -160,6 +178,12 @@ export const translations: Record<Language, any> = {
     frequencies: {
       [FrequencyType.ANNUAL]: "Urtekoa",
       [FrequencyType.QUARTERLY]: "Hiruhilekoa",
+    },
+    itemLabels: {
+      "Madrid": "Madril", "Catalonia": "Katalunia", "Andalusia": "Andaluzia", "Basque Country": "Euskal Herria", "Valencia": "Valentzia", "Galicia": "Galizia", "Castile and León": "Gaztela eta Leon", "Canary Islands": "Kanariak", "Murcia": "Murtzia", "Aragon": "Aragoi",
+      "Primary": "Lehen hezkuntza", "Secondary": "Bigarren hezkuntza", "Vocational Training": "Lanbide Heziketa", "Higher Education": "Goi Mailako Ikasketak",
+      "16-24": "16-24", "25-54": "25-54", "55+": "55+",
+      "Male": "Gizonezkoa", "Female": "Emakumezkoa"
     }
   },
   [Language.CA]: {
@@ -200,6 +224,12 @@ export const translations: Record<Language, any> = {
     frequencies: {
       [FrequencyType.ANNUAL]: "Anual",
       [FrequencyType.QUARTERLY]: "Trimestral",
+    },
+    itemLabels: {
+      "Madrid": "Madrid", "Catalonia": "Catalunya", "Andalusia": "Andalusia", "Basque Country": "País Basc", "Valencia": "València", "Galicia": "Galícia", "Castile and León": "Castella i Lleó", "Canary Islands": "Illes Canàries", "Murcia": "Múrcia", "Aragon": "Aragó",
+      "Primary": "Primària", "Secondary": "Secundària", "Vocational Training": "Formació Professional", "Higher Education": "Educació Superior",
+      "16-24": "16-24", "25-54": "25-54", "55+": "55+",
+      "Male": "Home", "Female": "Dona"
     }
   }
 };

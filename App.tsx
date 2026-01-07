@@ -190,7 +190,7 @@ const App: React.FC = () => {
                         className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                       />
                       <span className={`text-sm ${selectedItems.includes(item) ? 'text-slate-900 font-medium' : 'text-slate-500'}`}>
-                        {item}
+                        {t.itemLabels[item] || item}
                       </span>
                     </label>
                   ))}
@@ -259,7 +259,7 @@ const App: React.FC = () => {
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="text-xs text-slate-500 font-medium">
-                    Ages {minAge}-{maxAge} ({t.frequencies[frequency]})
+                    {t.to === 'to' ? 'Ages' : 'Idades'} {minAge}-{maxAge} ({t.frequencies[frequency]})
                   </span>
                 </div>
               </div>
@@ -278,7 +278,7 @@ const App: React.FC = () => {
                 </div>
               </div>
             ) : filteredData.length > 0 ? (
-              <ChartContainer data={filteredData} indicator={indicator} chartType={chartType} showEvents={showEvents} />
+              <ChartContainer data={filteredData} indicator={indicator} chartType={chartType} showEvents={showEvents} language={language} />
             ) : (
               <div className="h-[450px] flex flex-col items-center justify-center text-slate-400 gap-4">
                 <i className="fa-solid fa-filter-circle-xmark text-5xl opacity-20"></i>
@@ -305,7 +305,7 @@ const App: React.FC = () => {
                 </h3>
                 <div className="space-y-4 text-sm text-slate-600">
                   <p>
-                    Analyzing workers from <span className="font-bold text-slate-800">{minAge}</span> to <span className="font-bold text-slate-800">{maxAge}</span> years old.
+                    {t.dynamicFilter === 'Filtro Dinámico' ? 'Analizando traballadores de' : 'Analyzing workers from'} <span className="font-bold text-slate-800">{minAge}</span> {t.to} <span className="font-bold text-slate-800">{maxAge}</span> {t.to === 'ata' ? 'anos de idade' : 'years old'}.
                   </p>
                   <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
                     <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Historical Context</h4>

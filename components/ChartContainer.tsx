@@ -4,16 +4,19 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
   AreaChart, Area, BarChart, Bar, ReferenceArea, Label 
 } from 'recharts';
-import { DataPoint, ChartDataItem, IndicatorType } from '../types';
+import { DataPoint, ChartDataItem, IndicatorType, Language } from '../types';
+import { translations } from '../translations';
 
 interface ChartContainerProps {
   data: DataPoint[];
   indicator: IndicatorType;
   chartType: 'line' | 'bar' | 'area';
   showEvents?: boolean;
+  language: Language;
 }
 
-const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartType, showEvents }) => {
+const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartType, showEvents, language }) => {
+  const t = translations[language];
   const chartData = useMemo(() => {
     const periods: string[] = Array.from(new Set(data.map(d => d.period)));
     const categories: string[] = Array.from(new Set(data.map(d => d.category)));
@@ -33,7 +36,6 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
   const categories = useMemo<string[]>(() => Array.from(new Set(data.map(d => d.category))), [data]);
   const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
-  // Determine if we are looking at quarterly or annual data based on the first period string
   const isQuarterly = chartData.length > 0 && chartData[0].period.includes('Q');
 
   const recessionAreas = useMemo(() => {
@@ -41,7 +43,7 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
     
     const events = [
       {
-        name: 'Great Recession',
+        name: t.recessionMarkers === 'Marcadores de Recesión' ? 'Gran Recesión' : 'Great Recession',
         start: isQuarterly ? '2008Q2' : '2008',
         end: isQuarterly ? '2013Q4' : '2013',
         color: '#f1f5f9'
@@ -54,14 +56,13 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
       }
     ];
 
-    // Only return events that overlap with current chart data range
     const availablePeriods = chartData.map(d => d.period);
     return events.filter(event => 
       availablePeriods.includes(event.start) || 
       availablePeriods.includes(event.end) ||
       (availablePeriods[0] < event.start && availablePeriods[availablePeriods.length-1] > event.end)
     );
-  }, [showEvents, isQuarterly, chartData]);
+  }, [showEvents, isQuarterly, chartData, t]);
 
   const renderEvents = () => (
     <>
@@ -111,12 +112,14 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
             <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit="%" />
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              formatter={(value, name) => [value + '%', t.itemLabels[name as string] || name]}
             />
-            <Legend verticalAlign="top" height={36}/>
+            <Legend verticalAlign="top" height={36} formatter={(value) => t.itemLabels[value] || value} />
             {renderEvents()}
             {categories.map((cat, idx) => (
               <Area 
                 key={cat} 
+                name={t.itemLabels[cat] || cat}
                 type="monotone" 
                 dataKey={cat} 
                 stroke={colors[idx % colors.length]} 
@@ -136,12 +139,14 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
             <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit="%" />
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              formatter={(value, name) => [value + '%', t.itemLabels[name as string] || name]}
             />
-            <Legend verticalAlign="top" height={36}/>
+            <Legend verticalAlign="top" height={36} formatter={(value) => t.itemLabels[value] || value} />
             {renderEvents()}
             {categories.map((cat, idx) => (
               <Bar 
                 key={cat} 
+                name={t.itemLabels[cat] || cat}
                 dataKey={cat} 
                 fill={colors[idx % colors.length]} 
                 radius={[4, 4, 0, 0]} 
@@ -158,12 +163,14 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
             <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} unit="%" />
             <Tooltip 
               contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              formatter={(value, name) => [value + '%', t.itemLabels[name as string] || name]}
             />
-            <Legend verticalAlign="top" height={36}/>
+            <Legend verticalAlign="top" height={36} formatter={(value) => t.itemLabels[value] || value} />
             {renderEvents()}
             {categories.map((cat, idx) => (
               <Line 
                 key={cat} 
+                name={t.itemLabels[cat] || cat}
                 type="monotone" 
                 dataKey={cat} 
                 stroke={colors[idx % colors.length]} 
