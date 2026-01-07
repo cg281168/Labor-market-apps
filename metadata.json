@@ -1,0 +1,5 @@
+{
+  "name": "Spanish Labor Market Explorer",
+  "description": "A sophisticated dashboard to explore Spanish labor market data (EPA) from INE, featuring unemployment, employment, and labor force rates categorized by region, education, and demographics with AI-powered economic analysis.",
+  "requestFramePermissions": []
+}
