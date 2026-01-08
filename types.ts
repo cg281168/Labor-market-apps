@@ -31,11 +31,18 @@ export enum FrequencyType {
   ANNUAL = 'Annual',
 }
 
+export type DataSourceType = 'official' | 'simulated';
+
 export interface DataPoint {
   period: string;
   value: number;
   category: string;
   year: number;
+}
+
+export interface FetchResult {
+  data: DataPoint[];
+  source: DataSourceType;
 }
 
 export interface INESeries {

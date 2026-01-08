@@ -1,13 +1,12 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { IndicatorType, CharacteristicType, DataPoint, FrequencyType, Language, WageType } from './types';
+import { IndicatorType, CharacteristicType, DataPoint, FrequencyType, Language, WageType, DataSourceType } from './types';
 import { fetchLaborData, getAvailableItems } from './services/ineService';
 import ChartContainer from './components/ChartContainer';
 import AnalysisPanel from './components/AnalysisPanel';
 import { translations } from './translations';
 
 const App: React.FC = () => {
-  // Initialize language from localStorage or default to Galician
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('iberiadata_pref_lang');
     if (saved && Object.values(Language).includes(saved as Language)) {
@@ -19,7 +18,7 @@ const App: React.FC = () => {
   const [indicator, setIndicator] = useState<IndicatorType>(IndicatorType.UNEMPLOYMENT_RATE);
   const [wageType, setWageType] = useState<WageType>(WageType.CONSTANT);
   const [characteristic, setCharacteristic] = useState<CharacteristicType>(CharacteristicType.REGION);
-  const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.QUARTERLY);
+  const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.ANNUAL);
   const [startYear, setStartYear] = useState<number>(2014);
   const [endYear, setEndYear] = useState<number>(2024);
   const [minAge, setMinAge] = useState<number>(16);
@@ -28,28 +27,28 @@ const App: React.FC = () => {
   const [chartType, setChartType] = useState<'line' | 'bar' | 'area'>('line');
   const [showEvents, setShowEvents] = useState<boolean>(true);
   const [rawData, setRawData] = useState<DataPoint[]>([]);
+  const [dataSource, setDataSource] = useState<DataSourceType>('simulated');
   const [loading, setLoading] = useState<boolean>(true);
 
   const t = translations[language];
   const allItems = useMemo(() => getAvailableItems(characteristic), [characteristic]);
 
-  // Persist language preference
   useEffect(() => {
     localStorage.setItem('iberiadata_pref_lang', language);
   }, [language]);
 
   useEffect(() => {
-    // Select Total and major regions by default
     setSelectedItems(allItems.slice(0, 4));
   }, [allItems]);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const fetched = await fetchLaborData(indicator, characteristic, frequency, startYear, endYear, minAge, maxAge, wageType);
-      setRawData(fetched);
+      const result = await fetchLaborData(indicator, characteristic, frequency, startYear, endYear, minAge, maxAge, wageType);
+      setRawData(result.data);
+      setDataSource(result.source);
     } catch (err) {
-      console.error("Failed to load INE data", err);
+      console.error("Failed to load data", err);
     } finally {
       setLoading(false);
     }
@@ -89,18 +88,11 @@ const App: React.FC = () => {
           </div>
           
           <div className="hidden md:flex items-center gap-4">
-            <div className="flex items-center bg-slate-100 p-1 rounded-lg gap-1">
-              {Object.values(Language).map(lang => (
-                <button
-                  key={lang}
-                  onClick={() => setLanguage(lang)}
-                  className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition-all ${
-                    language === lang ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  {lang}
-                </button>
-              ))}
+            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider ${
+              dataSource === 'official' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-amber-50 text-amber-700 border-amber-200'
+            }`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${dataSource === 'official' ? 'bg-green-500' : 'bg-amber-500 animate-pulse'}`}></span>
+              {dataSource === 'official' ? 'Live API Data' : 'Calibrated Simulation'}
             </div>
 
             <div className="h-6 w-[1px] bg-slate-200 mx-2"></div>
@@ -236,11 +228,11 @@ const App: React.FC = () => {
             <div className="relative z-10">
               <h3 className="font-bold mb-1 text-lg">{t.historicalAnalysis}</h3>
               <p className="text-xs text-indigo-100 mb-4 leading-relaxed">
-                Visualizing labor market evolution. Direct integration with official INE JSON-stat API.
+                Visualizing labor market evolution. {dataSource === 'official' ? 'Direct integration with official INE JSON-stat API.' : 'Economic model calibrated with 2024 benchmarks.'}
               </p>
               <div className="flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full border border-white/20">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                <span className="text-[10px] font-bold uppercase tracking-wider">Live API Data</span>
+                <span className={`w-2 h-2 rounded-full ${dataSource === 'official' ? 'bg-green-400' : 'bg-amber-400 animate-pulse'}`}></span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">{dataSource === 'official' ? 'API Live' : 'Simulated Data'}</span>
               </div>
             </div>
             <i className="fa-solid fa-server absolute bottom-[-10px] right-[-10px] text-8xl text-indigo-400 opacity-10 rotate-12"></i>
@@ -260,7 +252,7 @@ const App: React.FC = () => {
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="text-xs text-slate-500 font-medium">
-                    Official INE Data ({t.frequencies[frequency]})
+                    {dataSource === 'official' ? 'Official INE Data' : 'Calibrated Historical Model'} ({t.frequencies[frequency]})
                   </span>
                 </div>
               </div>
@@ -275,23 +267,32 @@ const App: React.FC = () => {
               <div className="h-[450px] flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                   <div className="w-12 h-12 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
-                  <p className="text-slate-400 text-sm font-medium">Retrieving real-time data from INEBase...</p>
+                  <p className="text-slate-400 text-sm font-medium">Synthesizing data series...</p>
                 </div>
               </div>
             ) : filteredData.length > 0 ? (
-              <ChartContainer data={filteredData} indicator={indicator} chartType={chartType} showEvents={showEvents} language={language} />
+              <div className="relative">
+                <ChartContainer 
+                  data={filteredData} 
+                  indicator={indicator} 
+                  chartType={chartType} 
+                  showEvents={showEvents} 
+                  language={language} 
+                  dataSource={dataSource}
+                />
+              </div>
             ) : (
               <div className="h-[450px] flex flex-col items-center justify-center text-slate-400 gap-4">
                 <i className="fa-solid fa-filter-circle-xmark text-5xl opacity-20"></i>
                 <div className="text-center">
-                  <p className="font-semibold text-slate-600">No data found</p>
-                  <p className="text-xs">Adjust filters or select items to display data.</p>
+                  <p className="font-semibold text-slate-600">Series not populated</p>
+                  <p className="text-xs">Select categories to visualize historical trends.</p>
                 </div>
               </div>
             )}
             <div className="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
                <span className="text-[10px] text-slate-400 italic">
-                Source: INE (Instituto Nacional de Estadística) - EPA & ETCL Series.
+                Source: {dataSource === 'official' ? 'INE (Instituto Nacional de Estadística) - EPA & ETCL Series.' : 'Mathematical model calibrated with official 2024 INE benchmarks.'}
               </span>
               <a href="https://www.ine.es" target="_blank" rel="noreferrer" className="text-[10px] font-bold text-indigo-600 hover:underline">ine.es</a>
             </div>
@@ -315,9 +316,11 @@ const App: React.FC = () => {
                     {t.dynamicFilter === 'Filtro Dinámico' ? 'Analizando series históricas dende' : 'Analyzing historical series since'} <span className="font-bold text-slate-800">{startYear}</span>.
                   </p>
                   <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
-                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">API Information</h4>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Technical Note</h4>
                     <p className="text-[11px] text-slate-500 leading-relaxed italic">
-                      "Data is fetched directly from the JSON-stat API. Inflation adjustments are calculated using the General CPI index (Base 2021) to ensure accurate cross-temporal wage comparisons."
+                      {dataSource === 'official' 
+                        ? "Fetching raw JSON-stat vectors from INE's public API. Constant values derived via General CPI Index adjustments."
+                        : "High-fidelity simulation active. Model uses 2024 Q3 EPA benchmarks as base targets and applies historical volatility coefficients."}
                     </p>
                   </div>
                 </div>

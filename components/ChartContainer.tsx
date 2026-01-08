@@ -4,7 +4,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
   AreaChart, Area, BarChart, Bar, ReferenceArea, Label 
 } from 'recharts';
-import { DataPoint, ChartDataItem, IndicatorType, Language } from '../types';
+import { DataPoint, ChartDataItem, IndicatorType, Language, DataSourceType } from '../types';
 import { translations } from '../translations';
 
 interface ChartContainerProps {
@@ -13,9 +13,10 @@ interface ChartContainerProps {
   chartType: 'line' | 'bar' | 'area';
   showEvents?: boolean;
   language: Language;
+  dataSource: DataSourceType;
 }
 
-const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartType, showEvents, language }) => {
+const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartType, showEvents, language, dataSource }) => {
   const t = translations[language];
   const isWage = indicator === IndicatorType.MONTHLY_WAGE;
   const unit = isWage ? '€' : '%';
@@ -191,10 +192,25 @@ const ChartContainer: React.FC<ChartContainerProps> = ({ data, indicator, chartT
   };
 
   return (
-    <div className="w-full h-[400px] md:h-[500px]">
+    <div className="w-full h-[400px] md:h-[500px] relative">
       <ResponsiveContainer width="100%" height="100%">
         {renderChart()}
       </ResponsiveContainer>
+      
+      {dataSource === 'simulated' && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <div className="rotate-[-25deg] text-slate-100/50 text-4xl md:text-7xl font-black uppercase select-none tracking-tighter">
+            Simulated Data
+          </div>
+        </div>
+      )}
+
+      {dataSource === 'simulated' && (
+        <div className="absolute top-10 right-10 bg-amber-500/10 border border-amber-500/20 rounded px-2 py-1 flex items-center gap-2 pointer-events-none">
+          <i className="fa-solid fa-triangle-exclamation text-amber-600 text-[10px]"></i>
+          <span className="text-[10px] font-bold text-amber-700 uppercase tracking-tighter">Calibrated Model</span>
+        </div>
+      )}
     </div>
   );
 };
