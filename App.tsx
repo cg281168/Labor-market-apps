@@ -19,8 +19,8 @@ const App: React.FC = () => {
   const [indicator, setIndicator] = useState<IndicatorType>(IndicatorType.UNEMPLOYMENT_RATE);
   const [wageType, setWageType] = useState<WageType>(WageType.CONSTANT);
   const [characteristic, setCharacteristic] = useState<CharacteristicType>(CharacteristicType.REGION);
-  const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.ANNUAL);
-  const [startYear, setStartYear] = useState<number>(2002);
+  const [frequency, setFrequency] = useState<FrequencyType>(FrequencyType.QUARTERLY);
+  const [startYear, setStartYear] = useState<number>(2014);
   const [endYear, setEndYear] = useState<number>(2024);
   const [minAge, setMinAge] = useState<number>(16);
   const [maxAge, setMaxAge] = useState<number>(64);
@@ -39,8 +39,8 @@ const App: React.FC = () => {
   }, [language]);
 
   useEffect(() => {
-    // Select Total and first two items by default
-    setSelectedItems(allItems.slice(0, 3));
+    // Select Total and major regions by default
+    setSelectedItems(allItems.slice(0, 4));
   }, [allItems]);
 
   const loadData = useCallback(async () => {
@@ -80,7 +80,7 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="bg-indigo-600 p-2 rounded-lg">
-              <i className="fa-solid fa-chart-pie text-white text-xl"></i>
+              <i className="fa-solid fa-building-columns text-white text-xl"></i>
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-900 tracking-tight">{t.appName}</h1>
@@ -97,7 +97,6 @@ const App: React.FC = () => {
                   className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition-all ${
                     language === lang ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'
                   }`}
-                  aria-label={`Switch to ${lang}`}
                 >
                   {lang}
                 </button>
@@ -179,28 +178,6 @@ const App: React.FC = () => {
               )}
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">{t.ageRange}</label>
-                <div className="flex items-center gap-2">
-                  <select 
-                    value={minAge} 
-                    onChange={e => setMinAge(Number(e.target.value))}
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500"
-                  >
-                    {ageOptions.map(age => <option key={age} value={age}>{t.min}: {age}</option>)}
-                  </select>
-                  <span className="text-slate-400 text-xs">{t.to}</span>
-                  <select 
-                    value={maxAge} 
-                    onChange={e => setMaxAge(Number(e.target.value))}
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-lg px-2 py-2 text-xs font-medium focus:ring-2 focus:ring-indigo-500"
-                  >
-                    {ageOptions.filter(a => a > minAge).map(age => <option key={age} value={age}>{t.max}: {age === 75 ? '75+' : age}</option>)}
-                    {maxAge === 64 && !ageOptions.includes(64) && <option value={64}>{t.max}: 64</option>}
-                  </select>
-                </div>
-              </div>
-
-              <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">{t.breakdown}</label>
                 <select 
                   value={characteristic}
@@ -236,19 +213,6 @@ const App: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100">
-                <label className="block text-sm font-semibold text-slate-700 mb-3">{t.contextualLayers}</label>
-                <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-100">
-                  <span className="text-xs font-medium text-slate-600">{t.recessionMarkers}</span>
-                  <button 
-                    onClick={() => setShowEvents(!showEvents)}
-                    className={`relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none ${showEvents ? 'bg-indigo-600' : 'bg-slate-300'}`}
-                  >
-                    <span className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform ${showEvents ? 'translate-x-6' : 'translate-x-1'}`} />
-                  </button>
-                </div>
-              </div>
-
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">{t.visualization}</label>
                 <div className="grid grid-cols-3 gap-2">
@@ -272,14 +236,14 @@ const App: React.FC = () => {
             <div className="relative z-10">
               <h3 className="font-bold mb-1 text-lg">{t.historicalAnalysis}</h3>
               <p className="text-xs text-indigo-100 mb-4 leading-relaxed">
-                Visualizing labor market evolution. Explore the impact of global economic cycles.
+                Visualizing labor market evolution. Direct integration with official INE JSON-stat API.
               </p>
               <div className="flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full border border-white/20">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                <span className="text-[10px] font-bold uppercase tracking-wider">{t.dynamicFilter}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider">Live API Data</span>
               </div>
             </div>
-            <i className="fa-solid fa-users-line absolute bottom-[-10px] right-[-10px] text-8xl text-indigo-400 opacity-10 rotate-12"></i>
+            <i className="fa-solid fa-server absolute bottom-[-10px] right-[-10px] text-8xl text-indigo-400 opacity-10 rotate-12"></i>
           </div>
         </aside>
 
@@ -289,11 +253,6 @@ const App: React.FC = () => {
               <div>
                 <h2 className="text-2xl font-bold text-slate-900">
                   {t.indicators[indicator]}
-                  {indicator === IndicatorType.MONTHLY_WAGE && (
-                    <span className="ml-2 text-sm font-medium text-slate-400">
-                      ({wageType === WageType.NOMINAL ? t.nominal : t.constant})
-                    </span>
-                  )}
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 mt-1">
                   <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-[10px] font-bold uppercase tracking-wider border border-indigo-100">
@@ -301,7 +260,7 @@ const App: React.FC = () => {
                   </span>
                   <span className="text-slate-300">•</span>
                   <span className="text-xs text-slate-500 font-medium">
-                    {t.to === 'to' ? 'Ages' : 'Idades'} {minAge}-{maxAge} ({t.frequencies[frequency]})
+                    Official INE Data ({t.frequencies[frequency]})
                   </span>
                 </div>
               </div>
@@ -316,7 +275,7 @@ const App: React.FC = () => {
               <div className="h-[450px] flex items-center justify-center">
                 <div className="flex flex-col items-center gap-4">
                   <div className="w-12 h-12 border-4 border-slate-100 border-t-indigo-600 rounded-full animate-spin"></div>
-                  <p className="text-slate-400 text-sm font-medium">Aggregating historical EPA datasets...</p>
+                  <p className="text-slate-400 text-sm font-medium">Retrieving real-time data from INEBase...</p>
                 </div>
               </div>
             ) : filteredData.length > 0 ? (
@@ -325,15 +284,16 @@ const App: React.FC = () => {
               <div className="h-[450px] flex flex-col items-center justify-center text-slate-400 gap-4">
                 <i className="fa-solid fa-filter-circle-xmark text-5xl opacity-20"></i>
                 <div className="text-center">
-                  <p className="font-semibold text-slate-600">No items selected</p>
-                  <p className="text-xs">Please select items from the sidebar to visualize.</p>
+                  <p className="font-semibold text-slate-600">No data found</p>
+                  <p className="text-xs">Adjust filters or select items to display data.</p>
                 </div>
               </div>
             )}
-            <div className="mt-4 pt-4 border-t border-slate-50 flex justify-end">
-              <span className="text-[10px] text-slate-400 italic">
-                Source: Simulation based on historical INE (EPA) benchmarks.
+            <div className="mt-4 pt-4 border-t border-slate-50 flex justify-between items-center">
+               <span className="text-[10px] text-slate-400 italic">
+                Source: INE (Instituto Nacional de Estadística) - EPA & ETCL Series.
               </span>
+              <a href="https://www.ine.es" target="_blank" rel="noreferrer" className="text-[10px] font-bold text-indigo-600 hover:underline">ine.es</a>
             </div>
           </div>
 
@@ -352,18 +312,13 @@ const App: React.FC = () => {
                 </h3>
                 <div className="space-y-4 text-sm text-slate-600">
                   <p>
-                    {t.dynamicFilter === 'Filtro Dinámico' ? 'Analizando traballadores de' : 'Analyzing workers from'} <span className="font-bold text-slate-800">{minAge}</span> {t.to} <span className="font-bold text-slate-800">{maxAge}</span> {t.to === 'ata' ? 'anos de idade' : 'years old'}.
+                    {t.dynamicFilter === 'Filtro Dinámico' ? 'Analizando series históricas dende' : 'Analyzing historical series since'} <span className="font-bold text-slate-800">{startYear}</span>.
                   </p>
                   <div className="p-4 bg-slate-50 rounded-lg border border-slate-100">
-                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Historical Context</h4>
+                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">API Information</h4>
                     <p className="text-[11px] text-slate-500 leading-relaxed italic">
-                      "EPA data includes specific micro-data for the selected age cohort, allowing for precise comparison of demographic segments."
+                      "Data is fetched directly from the JSON-stat API. Inflation adjustments are calculated using the General CPI index (Base 2021) to ensure accurate cross-temporal wage comparisons."
                     </p>
-                  </div>
-                  <div className="pt-2">
-                    <button className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
-                      {t.methodology}
-                    </button>
                   </div>
                 </div>
              </div>
